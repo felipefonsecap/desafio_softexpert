@@ -1,6 +1,6 @@
 import {todos} from './state';
 import {listen} from './lib/events';
-import {addTodo, toggleTodoState} from './actions';
+import {addTodo, toggleTodoState, filtrar} from './actions';
 
 export function registerEventHandlers() {
     listen('click', '#addTodo', event => {
@@ -25,4 +25,20 @@ export function registerEventHandlers() {
         const id = Number.parseInt(event.target.getAttribute('data-id'), 10);
         todos.dispatch(toggleTodoState(id));
     });
+	
+	listen('click', 'input[type="radio"]', event => {
+		var elemento = event.target;
+
+		var listaInputs = document.querySelectorAll('[type="radio"]');
+		console.log(listaInputs);
+		listaInputs[0].checked = false;
+		listaInputs[1].checked = false;
+		listaInputs[2].checked = false;
+		elemento.checked = true;
+		
+		event.stopPropagation();
+		
+		todos.dispatch(filtrar(elemento.value));
+	});
+	
 }

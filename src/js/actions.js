@@ -12,3 +12,10 @@ export function addTodo(text) {
         text
     }
 }
+
+export function filtrar(text) {
+    return {
+        type: 'FILTRAR',
+        text
+    }
+}

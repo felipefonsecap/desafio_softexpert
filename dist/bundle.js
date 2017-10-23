@@ -9280,14 +9280,31 @@
 	    }]
 	};
 
+	var initialStateAux = {
+	    todos: [{
+	        id: 0,
+	        text: 'Take a look at the application',
+	        done: true
+	    }, {
+	        id: 1,
+	        text: 'Add ability to filter todos',
+	        done: false
+	    }, {
+	        id: 2,
+	        text: 'Filter todos by status',
+	        done: false
+	    }, {
+	        id: 3,
+	        text: 'Filter todos by text',
+	        done: false
+	    }]
+	};
+
 	function todoChangeHandler(state, change) {
 	    switch (change.type) {
 	        case 'ADD_TODO':
-	            state.todos.push({
-	                id: state.todos.length,
-	                text: change.text,
-	                done: false
-	            });
+	            state.todos.push(adicionarElemento(change.text, state.todos.length));
+	            initialStateAux.todos.push(adicionarElemento(change.text, initialStateAux.todos.length));
 	            break;
 	        case 'TODO_TOGGLE_DONE':
 	            var _iteratorNormalCompletion = true;
@@ -9319,7 +9336,37 @@
 	            }
 
 	            break;
+
+	        case 'FILTRAR':
+	            console.log(initialState.todos);
+	            state.todos = initialStateAux.todos.filter(function (el) {
+	                return filtro(change.text, el);
+	            });
+	            break;
 	    }
+	}
+
+	function filtro(tipo, el) {
+	    switch (tipo) {
+	        case 'somenteAberto':
+	            return el.done;
+	            break;
+
+	        case 'somenteFechado':
+	            return !el.done;
+
+	        default:
+	            return true;
+	    }
+	}
+
+	function adicionarElemento(texto, tamanho) {
+	    var elemento = {
+	        id: tamanho,
+	        text: texto,
+	        done: false
+	    };
+	    return elemento;
 	}
 
 	var todos = exports.todos = (0, _state.createStore)(todoChangeHandler, initialState);
@@ -10312,12 +10359,20 @@
 	    if ((0, _feature.isEnabled)('renderBottom')) {
 	        return renderAddTodoAtBottom(input, todoList);
 	    } else {
-	        return renderAddTodoAtTop(input, todoList);
+	        if ((0, _feature.isEnabled)('filter')) {
+	            return renderAddTodoAtTopFilter(input, todoList);
+	        } else {
+	            return renderAddTodoAtTop(input, todoList);
+	        }
 	    }
 	}
 
 	function renderAddTodoAtTop(input, todoList) {
 	    return '<div id="app">\n        ' + input + '\n        ' + todoList + '\n    </div>';
+	}
+
+	function renderAddTodoAtTopFilter(input, todoList) {
+	    return '<form action="">\n  <input type="radio" name="toos" value="todos" checked="">Mostrar Todos<br>\n  <input type="radio" name="somenteAberto" value="somenteAberto"> Somente Aberto<br>\n  <input type="radio" name="somenteFechado" value="somenteFechado"> Somente Fechado\n</form>\n\t<div id="app">\n        ' + input + '\n        ' + todoList + '\n    </div>';
 	}
 
 	function renderAddTodoAtBottom(input, todoList) {
@@ -10358,7 +10413,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+		value: true
 	});
 
 	var _parseInt = __webpack_require__(389);
@@ -10376,29 +10431,44 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function registerEventHandlers() {
-	    (0, _events.listen)('click', '#addTodo', function (event) {
-	        console.log('ok2');
-	        var todoInput = document.getElementById('todoInput');
-	        _state.todos.dispatch((0, _actions.addTodo)(todoInput.value));
-	        event.stopPropagation();
-	    });
+		(0, _events.listen)('click', '#addTodo', function (event) {
+			console.log('ok2');
+			var todoInput = document.getElementById('todoInput');
+			_state.todos.dispatch((0, _actions.addTodo)(todoInput.value));
+			event.stopPropagation();
+		});
 
-	    //codigo para adicionar novo item com o pressionar da tecla ENTER\\
-	    (0, _events.listen)('keydown', '#todoInput', function (event) {
-	        if (event.code == 'Enter' || event.keyCode == 13) {
-	            var _todoInput = document.getElementById('todoInput');
-	            _state.todos.dispatch((0, _actions.addTodo)(_todoInput.value));
-	        }
-	        event.stopPropagation();
-	        //comando para forcar o foco no input
-	        todoInput.focus();
-	    });
+		//codigo para adicionar novo item com o pressionar da tecla ENTER\\
+		(0, _events.listen)('keydown', '#todoInput', function (event) {
+			if (event.code == 'Enter' || event.keyCode == 13) {
+				var _todoInput = document.getElementById('todoInput');
+				_state.todos.dispatch((0, _actions.addTodo)(_todoInput.value));
+			}
+			event.stopPropagation();
+			//comando para forcar o foco no input
+			todoInput.focus();
+		});
 
-	    (0, _events.listen)('click', '.js_toggle_todo', function (event) {
-	        var id = (0, _parseInt2.default)(event.target.getAttribute('data-id'), 10);
-	        _state.todos.dispatch((0, _actions.toggleTodoState)(id));
-	    });
-	}
+		(0, _events.listen)('click', '.js_toggle_todo', function (event) {
+			var id = (0, _parseInt2.default)(event.target.getAttribute('data-id'), 10);
+			_state.todos.dispatch((0, _actions.toggleTodoState)(id));
+		});
+
+		(0, _events.listen)('click', 'input[type="radio"]', function (event) {
+			var elemento = event.target;
+
+			var listaInputs = document.querySelectorAll('[type="radio"]');
+			console.log(listaInputs);
+			listaInputs[0].checked = false;
+			listaInputs[1].checked = false;
+			listaInputs[2].checked = false;
+			elemento.checked = true;
+
+			event.stopPropagation();
+
+			_state.todos.dispatch((0, _actions.filtrar)(elemento.value));
+		});
+		}
 
 /***/ }),
 /* 389 */
@@ -10512,6 +10582,7 @@
 	});
 	exports.toggleTodoState = toggleTodoState;
 	exports.addTodo = addTodo;
+	exports.filtrar = filtrar;
 	function toggleTodoState(id) {
 	    return {
 	        type: 'TODO_TOGGLE_DONE',
@@ -10522,6 +10593,13 @@
 	function addTodo(text) {
 	    return {
 	        type: 'ADD_TODO',
+	        text: text
+	    };
+	}
+
+	function filtrar(text) {
+	    return {
+	        type: 'FILTRAR',
 	        text: text
 	    };
 		}

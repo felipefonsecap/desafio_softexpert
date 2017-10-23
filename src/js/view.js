@@ -12,12 +12,29 @@ function renderApp(input, todoList) {
     if(isEnabled('renderBottom')) {
         return renderAddTodoAtBottom(input, todoList);
     } else {
-        return renderAddTodoAtTop(input, todoList);
+		if(isEnabled('filter')) {
+			return renderAddTodoAtTopFilter(input, todoList);
+		} else {
+			return renderAddTodoAtTop(input, todoList);
+			
+		}
     }
 }
 
 function renderAddTodoAtTop(input, todoList) {
     return `<div id="app">
+        ${input}
+        ${todoList}
+    </div>`;
+}
+
+function renderAddTodoAtTopFilter(input, todoList) {
+    return `<form action="">
+  <input type="radio" name="toos" value="todos" checked="">Mostrar Todos<br>
+  <input type="radio" name="somenteAberto" value="somenteAberto"> Somente Aberto<br>
+  <input type="radio" name="somenteFechado" value="somenteFechado"> Somente Fechado
+</form>
+	<div id="app">
         ${input}
         ${todoList}
     </div>`;
