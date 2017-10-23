@@ -9,16 +9,24 @@ export function render(el, state) {
 }
 
 function renderApp(input, todoList) {
-    if(isEnabled('renderBottom')) {
-        return renderAddTodoAtBottom(input, todoList);
-    } else {
-		if(isEnabled('filter')) {
-			return renderAddTodoAtTopFilter(input, todoList);
-		} else {
-			return renderAddTodoAtTop(input, todoList);
-			
+	if (isEnabled('renderBottom') && isEnabled('filter') && isEnabled('filterTop')) {
+		return renderAddTodoAtBottomFilterTop(input, todoList)
+	} else {
+		if(isEnabled('renderBottom') && isEnabled('filter')) {
+			return renderAddTodoAtBottomFilter(input, todoList)
 		}
-    }
+		else {
+			if(isEnabled('filter')) {
+				return renderAddTodoAtTopFilter(input, todoList);
+			} else {
+				if(isEnabled('renderBottom')) {
+					return renderAddTodoAtBottom(input, todoList);
+				} else {
+					return renderAddTodoAtTop(input, todoList);
+				}			
+			}
+		}
+	}
 }
 
 function renderAddTodoAtTop(input, todoList) {
@@ -45,6 +53,32 @@ function renderAddTodoAtBottom(input, todoList) {
         ${todoList}
         ${input}
     </div>`;
+}
+
+function renderAddTodoAtBottomFilter(input, todoList) {
+    return `
+		<div id="app">
+			${todoList}
+			${input}
+		</div>
+		<form action="">
+		  <input type="radio" name="toos" value="todos" checked="">Mostrar Todos<br>
+		  <input type="radio" name="somenteAberto" value="somenteAberto"> Somente Aberto<br>
+		  <input type="radio" name="somenteFechado" value="somenteFechado"> Somente Fechado
+		</form>`;
+}
+
+function renderAddTodoAtBottomFilterTop(input, todoList) {
+    return `
+		<form action="">
+		  <input type="radio" name="toos" value="todos" checked="">Mostrar Todos<br>
+		  <input type="radio" name="somenteAberto" value="somenteAberto"> Somente Aberto<br>
+		  <input type="radio" name="somenteFechado" value="somenteFechado"> Somente Fechado
+		</form>
+		<div id="app">
+			${todoList}
+			${input}
+		</div>`;
 }
 
 function renderInput() {

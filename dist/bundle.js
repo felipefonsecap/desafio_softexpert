@@ -10344,52 +10344,68 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+					value: true
 	});
 	exports.render = render;
 
 	var _feature = __webpack_require__(387);
 
 	function render(el, state) {
-	    var todoItems = state.todos.map(renderTodoItem).join('');
-	    el.innerHTML = renderApp(renderInput(), renderTodos(todoItems));
+					var todoItems = state.todos.map(renderTodoItem).join('');
+					el.innerHTML = renderApp(renderInput(), renderTodos(todoItems));
 	}
 
 	function renderApp(input, todoList) {
-	    if ((0, _feature.isEnabled)('renderBottom')) {
-	        return renderAddTodoAtBottom(input, todoList);
-	    } else {
-	        if ((0, _feature.isEnabled)('filter')) {
-	            return renderAddTodoAtTopFilter(input, todoList);
-	        } else {
-	            return renderAddTodoAtTop(input, todoList);
-	        }
-	    }
+					if ((0, _feature.isEnabled)('renderBottom') && (0, _feature.isEnabled)('filter') && (0, _feature.isEnabled)('filterTop')) {
+									return renderAddTodoAtBottomFilterTop(input, todoList);
+					} else {
+									if ((0, _feature.isEnabled)('renderBottom') && (0, _feature.isEnabled)('filter')) {
+													return renderAddTodoAtBottomFilter(input, todoList);
+									} else {
+													if ((0, _feature.isEnabled)('filter')) {
+																	return renderAddTodoAtTopFilter(input, todoList);
+													} else {
+																	if ((0, _feature.isEnabled)('renderBottom')) {
+																					return renderAddTodoAtBottom(input, todoList);
+																	} else {
+																					return renderAddTodoAtTop(input, todoList);
+																	}
+													}
+									}
+					}
 	}
 
 	function renderAddTodoAtTop(input, todoList) {
-	    return '<div id="app">\n        ' + input + '\n        ' + todoList + '\n    </div>';
+					return '<div id="app">\n        ' + input + '\n        ' + todoList + '\n    </div>';
 	}
 
 	function renderAddTodoAtTopFilter(input, todoList) {
-	    return '<form action="">\n  <input type="radio" name="toos" value="todos" checked="">Mostrar Todos<br>\n  <input type="radio" name="somenteAberto" value="somenteAberto"> Somente Aberto<br>\n  <input type="radio" name="somenteFechado" value="somenteFechado"> Somente Fechado\n</form>\n\t<div id="app">\n        ' + input + '\n        ' + todoList + '\n    </div>';
+					return '<form action="">\n  <input type="radio" name="toos" value="todos" checked="">Mostrar Todos<br>\n  <input type="radio" name="somenteAberto" value="somenteAberto"> Somente Aberto<br>\n  <input type="radio" name="somenteFechado" value="somenteFechado"> Somente Fechado\n</form>\n\t<div id="app">\n        ' + input + '\n        ' + todoList + '\n    </div>';
 	}
 
 	function renderAddTodoAtBottom(input, todoList) {
-	    return '<div id="app">\n        ' + todoList + '\n        ' + input + '\n    </div>';
+					return '<div id="app">\n        ' + todoList + '\n        ' + input + '\n    </div>';
+	}
+
+	function renderAddTodoAtBottomFilter(input, todoList) {
+					return '\n\t\t<div id="app">\n\t\t\t' + todoList + '\n\t\t\t' + input + '\n\t\t</div>\n\t\t<form action="">\n\t\t  <input type="radio" name="toos" value="todos" checked="">Mostrar Todos<br>\n\t\t  <input type="radio" name="somenteAberto" value="somenteAberto"> Somente Aberto<br>\n\t\t  <input type="radio" name="somenteFechado" value="somenteFechado"> Somente Fechado\n\t\t</form>';
+	}
+
+	function renderAddTodoAtBottomFilterTop(input, todoList) {
+					return '\n\t\t<form action="">\n\t\t  <input type="radio" name="toos" value="todos" checked="">Mostrar Todos<br>\n\t\t  <input type="radio" name="somenteAberto" value="somenteAberto"> Somente Aberto<br>\n\t\t  <input type="radio" name="somenteFechado" value="somenteFechado"> Somente Fechado\n\t\t</form>\n\t\t<div id="app">\n\t\t\t' + todoList + '\n\t\t\t' + input + '\n\t\t</div>';
 	}
 
 	function renderInput() {
-	    return '<div class="todo__input"><input type="text" id="todoInput"><button id="addTodo">Add</button></div>';
+					return '<div class="todo__input"><input type="text" id="todoInput"><button id="addTodo">Add</button></div>';
 	}
 
 	function renderTodos(todoItems) {
-	    return '<ul class="todo">' + todoItems + '</ul>';
+					return '<ul class="todo">' + todoItems + '</ul>';
 	}
 
 	function renderTodoItem(todo) {
-	    var todoClass = 'todo__item todo__item--' + (todo.done ? 'done' : 'open');
-	    return '<li class="' + todoClass + '">\n        <input class="js_toggle_todo" type="checkbox" data-id="' + todo.id + '"' + (todo.done ? ' checked' : '') + '>\n        ' + todo.text + '\n    </li>';
+					var todoClass = 'todo__item todo__item--' + (todo.done ? 'done' : 'open');
+					return '<li class="' + todoClass + '">\n        <input class="js_toggle_todo" type="checkbox" data-id="' + todo.id + '"' + (todo.done ? ' checked' : '') + '>\n        ' + todo.text + '\n    </li>';
 		}
 
 /***/ }),
@@ -10399,11 +10415,14 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+		value: true
 	});
 	exports.isEnabled = isEnabled;
 	function isEnabled(name) {
-	    return window.location.hash.split('#').includes(name);
+		console.log(name);
+		console.log(window.location.hash.split('#'));
+		console.log(window.location.hash.split('#').includes(name));
+		return window.location.hash.split('#').includes(name);
 	}
 
 /***/ }),
