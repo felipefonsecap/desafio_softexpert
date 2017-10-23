@@ -10377,8 +10377,17 @@
 
 	function registerEventHandlers() {
 	    (0, _events.listen)('click', '#addTodo', function (event) {
+	        console.log('ok2');
 	        var todoInput = document.getElementById('todoInput');
 	        _state.todos.dispatch((0, _actions.addTodo)(todoInput.value));
+	        event.stopPropagation();
+	    });
+
+	    (0, _events.listen)('keydown', '#todoInput', function (event) {
+	        if (event.code == 'Enter' || event.keyCode == 13) {
+	            var todoInput = document.getElementById('todoInput');
+	            _state.todos.dispatch((0, _actions.addTodo)(todoInput.value));
+	        }
 	        event.stopPropagation();
 	    });
 
