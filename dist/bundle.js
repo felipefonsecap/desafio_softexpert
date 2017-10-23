@@ -10383,12 +10383,15 @@
 	        event.stopPropagation();
 	    });
 
+	    //codigo para adicionar novo item com o pressionar da tecla ENTER\\
 	    (0, _events.listen)('keydown', '#todoInput', function (event) {
 	        if (event.code == 'Enter' || event.keyCode == 13) {
-	            var todoInput = document.getElementById('todoInput');
-	            _state.todos.dispatch((0, _actions.addTodo)(todoInput.value));
+	            var _todoInput = document.getElementById('todoInput');
+	            _state.todos.dispatch((0, _actions.addTodo)(_todoInput.value));
 	        }
 	        event.stopPropagation();
+	        //comando para forcar o foco no input
+	        todoInput.focus();
 	    });
 
 	    (0, _events.listen)('click', '.js_toggle_todo', function (event) {

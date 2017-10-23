@@ -10,12 +10,15 @@ export function registerEventHandlers() {
         event.stopPropagation();
     });
 	
+	//codigo para adicionar novo item com o pressionar da tecla ENTER\\
 	listen('keydown', '#todoInput', event => {
 		if (event.code == 'Enter' || event.keyCode == 13) {
 			const todoInput = document.getElementById('todoInput');
-			todos.dispatch(addTodo(todoInput.value));			
+			todos.dispatch(addTodo(todoInput.value));
 		}
         event.stopPropagation();
+		//comando para forcar o foco no input
+		todoInput.focus();
     });
 
     listen('click', '.js_toggle_todo', event => {
