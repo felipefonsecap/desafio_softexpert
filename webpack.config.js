@@ -1,4 +1,5 @@
 var path = require('path');
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
     entry: ['babel-polyfill', path.normalize(__dirname + '/src/js/main')],
@@ -19,10 +20,15 @@ module.exports = {
                 }
             },
             {
-                loader: 'style!css',
                 test: /\.css$/,
-                include: [path.resolve(__dirname, 'src', 'css')]
+				use: ExtractTextPlugin.extract({
+				  fallback: "style-loader",
+				  use: "css-loader"
+				})
             }
         ]
-    }
+    },
+	plugins: [
+        new ExtractTextPlugin("styles.css")
+    ]
 };

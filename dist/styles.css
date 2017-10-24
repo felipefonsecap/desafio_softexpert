@@ -1,0 +1,47 @@
+
+html {
+    display: table;
+    margin: auto;
+}
+
+body {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.todo {
+    list-style-type: none;
+}
+
+#titulo {
+	margin-left: 40%;
+}
+
+.todo__input, .todo__item {
+    margin: 10px;
+}
+
+.todo__item--done {
+    text-decoration: line-through;
+}
+
+#addTodo {
+    margin-left: 10px;
+	border-radius: 50px;
+	background-color: transparent;
+}
+
+li {
+	font-weight: bold;
+}
+
+#todoInput {
+	box-shadow: inset 0px 1px 1px white, 0px 1px;
+	border-radius: 4px;
+}
+
+.checkbox {
+	margin-left: 20px;
+}
+
+/*# sourceMappingURL=styles.css.map*/
