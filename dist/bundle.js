@@ -8928,7 +8928,7 @@
 
 
 	// module
-	exports.push([module.id, "html, body, .todo {\n    margin: 0;\n    padding: 0;\n}\n\n.todo {\n    list-style-type: none;\n}\n\n.todo__input, .todo__item {\n    margin: 10px;\n}\n\n.todo__item--done {\n    text-decoration: line-through;\n}\n\n#addTodo {\n    margin-left: 10px;\n}\n", ""]);
+	exports.push([module.id, "\nhtml {\n    display: table;\n    margin: auto;\n}\n\nbody {\n    display: table-cell;\n    vertical-align: middle;\n}\n\n.todo {\n    list-style-type: none;\n}\n\n#titulo {\n\tmargin-left: 40%;\n}\n\n.todo__input, .todo__item {\n    margin: 10px;\n}\n\n.todo__item--done {\n    text-decoration: line-through;\n}\n\n#addTodo {\n    margin-left: 10px;\n\tborder-radius: 50px;\n\tbackground-color: transparent;\n}\n\nli {\n\tfont-weight: bold;\n}\n\n#todoInput {\n\tbox-shadow: inset 0px 1px 1px white, 0px 1px;\n\tborder-radius: 4px;\n}\n\n.checkbox {\n\tmargin-left: 20px;\n}\n", ""]);
 
 	// exports
 
@@ -10344,68 +10344,80 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-					value: true
+		value: true
 	});
 	exports.render = render;
 
 	var _feature = __webpack_require__(387);
 
 	function render(el, state) {
-					var todoItems = state.todos.map(renderTodoItem).join('');
-					el.innerHTML = renderApp(renderInput(), renderTodos(todoItems));
+		var todoItems = state.todos.map(renderTodoItem).join('');
+		el.innerHTML = renderApp(renderInput(), renderTodos(todoItems), renderFiltro());
 	}
 
-	function renderApp(input, todoList) {
-					if ((0, _feature.isEnabled)('renderBottom') && (0, _feature.isEnabled)('filter') && (0, _feature.isEnabled)('filterTop')) {
-									return renderAddTodoAtBottomFilterTop(input, todoList);
+	function renderApp(input, todoList, filtro) {
+		return renderTitulo() + renderCorpo(input, todoList, filtro);
+	}
+
+	function renderCorpo(input, todoList, filtro) {
+		if ((0, _feature.isEnabled)('renderBottom') && (0, _feature.isEnabled)('filter') && (0, _feature.isEnabled)('filterTop')) {
+			return renderAddTodoAtBottomFilterTop(input, todoList, filtro);
+		} else {
+			if ((0, _feature.isEnabled)('renderBottom') && (0, _feature.isEnabled)('filter')) {
+				return renderAddTodoAtBottomFilter(input, todoList, filtro);
+			} else {
+				if ((0, _feature.isEnabled)('filter')) {
+					return renderAddTodoAtTopFilter(input, todoList, filtro);
+				} else {
+					if ((0, _feature.isEnabled)('renderBottom')) {
+						return renderAddTodoAtBottom(input, todoList, '');
 					} else {
-									if ((0, _feature.isEnabled)('renderBottom') && (0, _feature.isEnabled)('filter')) {
-													return renderAddTodoAtBottomFilter(input, todoList);
-									} else {
-													if ((0, _feature.isEnabled)('filter')) {
-																	return renderAddTodoAtTopFilter(input, todoList);
-													} else {
-																	if ((0, _feature.isEnabled)('renderBottom')) {
-																					return renderAddTodoAtBottom(input, todoList);
-																	} else {
-																					return renderAddTodoAtTop(input, todoList);
-																	}
-													}
-									}
+						return renderAddTodoAtTop(input, todoList, '');
 					}
+				}
+			}
+		}
 	}
 
-	function renderAddTodoAtTop(input, todoList) {
-					return '<div id="app">\n        ' + input + '\n        ' + todoList + '\n    </div>';
+	function renderTitulo() {
+		return '<h2 id="titulo">Todo List</h2>';
 	}
 
-	function renderAddTodoAtTopFilter(input, todoList) {
-					return '<form action="">\n  <input type="radio" name="toos" value="todos" checked="">Mostrar Todos<br>\n  <input type="radio" name="somenteAberto" value="somenteAberto"> Somente Aberto<br>\n  <input type="radio" name="somenteFechado" value="somenteFechado"> Somente Fechado\n</form>\n\t<div id="app">\n        ' + input + '\n        ' + todoList + '\n    </div>';
+	function renderAddTodoAtTop(input, todoList, filtro) {
+		return '<div id="app">\n        ' + input + '\n        ' + todoList + '\n    </div>';
+	}
+
+	function renderAddTodoAtTopFilter(input, todoList, filtro) {
+		return filtro + '\n\t<div id="app">\n        ' + input + '\n        ' + todoList + '\n    </div>';
 	}
 
 	function renderAddTodoAtBottom(input, todoList) {
-					return '<div id="app">\n        ' + todoList + '\n        ' + input + '\n    </div>';
+		return '<div id="app">\n        ' + todoList + '\n        ' + input + '\n    </div>';
 	}
 
-	function renderAddTodoAtBottomFilter(input, todoList) {
-					return '\n\t\t<div id="app">\n\t\t\t' + todoList + '\n\t\t\t' + input + '\n\t\t</div>\n\t\t<form action="">\n\t\t  <input type="radio" name="toos" value="todos" checked="">Mostrar Todos<br>\n\t\t  <input type="radio" name="somenteAberto" value="somenteAberto"> Somente Aberto<br>\n\t\t  <input type="radio" name="somenteFechado" value="somenteFechado"> Somente Fechado\n\t\t</form>';
+	function renderAddTodoAtBottomFilter(input, todoList, filtro) {
+		return '\n\t\t<div id="app">\n\t\t\t' + todoList + '\n\t\t\t' + input + '\n\t\t</div>\n\t\t' + filtro;
 	}
 
-	function renderAddTodoAtBottomFilterTop(input, todoList) {
-					return '\n\t\t<form action="">\n\t\t  <input type="radio" name="toos" value="todos" checked="">Mostrar Todos<br>\n\t\t  <input type="radio" name="somenteAberto" value="somenteAberto"> Somente Aberto<br>\n\t\t  <input type="radio" name="somenteFechado" value="somenteFechado"> Somente Fechado\n\t\t</form>\n\t\t<div id="app">\n\t\t\t' + todoList + '\n\t\t\t' + input + '\n\t\t</div>';
+	function renderAddTodoAtBottomFilterTop(input, todoList, filtro) {
+		return '\n\t\t' + filtro + '\n\t\t<div id="app">\n\t\t\t' + todoList + '\n\t\t\t' + input + '\n\t\t</div>';
 	}
 
 	function renderInput() {
-					return '<div class="todo__input"><input type="text" id="todoInput"><button id="addTodo">Add</button></div>';
+		return '<div class="todo__input">Item: <input type="text" id="todoInput"><button id="addTodo"> + </button></div><hr>';
+	}
+
+	function renderFiltro() {
+		return '<div>' + '<hr>' + '<h3> Filtro:</h3>' + '<form action="">' + '<input class="checkbox" type="radio" name="toos" value="todos" checked=""><span> Mostrar Todos</span>' + '<input class="checkbox" type="radio" name="somenteAberto" value="somenteAberto"> <span> Somente Aberto</span>' + '<input class="checkbox" type="radio" name="somenteFechado" value="somenteFechado"> <span> Somente Fechado</span>' + '</form>' + '</div>' + '</br>' + '<hr>';
 	}
 
 	function renderTodos(todoItems) {
-					return '<ul class="todo">' + todoItems + '</ul>';
+		return '<ul class="todo">' + todoItems + '</ul>';
 	}
 
 	function renderTodoItem(todo) {
-					var todoClass = 'todo__item todo__item--' + (todo.done ? 'done' : 'open');
-					return '<li class="' + todoClass + '">\n        <input class="js_toggle_todo" type="checkbox" data-id="' + todo.id + '"' + (todo.done ? ' checked' : '') + '>\n        ' + todo.text + '\n    </li>';
+		var todoClass = 'todo__item todo__item--' + (todo.done ? 'done' : 'open');
+		return '<li class="' + todoClass + '">\n        <input class="js_toggle_todo" type="checkbox" data-id="' + todo.id + '"' + (todo.done ? ' checked' : '') + '>\n        ' + todo.text + '\n    </li>';
 		}
 
 /***/ }),

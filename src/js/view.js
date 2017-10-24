@@ -4,44 +4,49 @@ export function render(el, state) {
     const todoItems = state.todos.map(renderTodoItem).join('');
     el.innerHTML = renderApp(
         renderInput(),
-        renderTodos(todoItems)
+        renderTodos(todoItems),
+		renderFiltro()
     );
 }
 
-function renderApp(input, todoList) {
+function renderApp(input, todoList, filtro) {
+	return renderTitulo() + renderCorpo(input, todoList, filtro);
+}
+
+function renderCorpo(input, todoList, filtro) {
 	if (isEnabled('renderBottom') && isEnabled('filter') && isEnabled('filterTop')) {
-		return renderAddTodoAtBottomFilterTop(input, todoList)
+		return renderAddTodoAtBottomFilterTop(input, todoList, filtro)
 	} else {
 		if(isEnabled('renderBottom') && isEnabled('filter')) {
-			return renderAddTodoAtBottomFilter(input, todoList)
+			return renderAddTodoAtBottomFilter(input, todoList, filtro)
 		}
 		else {
 			if(isEnabled('filter')) {
-				return renderAddTodoAtTopFilter(input, todoList);
+				return renderAddTodoAtTopFilter(input, todoList, filtro);
 			} else {
 				if(isEnabled('renderBottom')) {
-					return renderAddTodoAtBottom(input, todoList);
+					return renderAddTodoAtBottom(input, todoList, '');
 				} else {
-					return renderAddTodoAtTop(input, todoList);
+					return renderAddTodoAtTop(input, todoList, '');
 				}			
 			}
 		}
 	}
 }
 
-function renderAddTodoAtTop(input, todoList) {
+function renderTitulo() {
+	return '<h2 id="titulo">Todo List</h2>';
+}
+
+function renderAddTodoAtTop(input, todoList, filtro) {
     return `<div id="app">
         ${input}
         ${todoList}
     </div>`;
 }
 
-function renderAddTodoAtTopFilter(input, todoList) {
-    return `<form action="">
-  <input type="radio" name="toos" value="todos" checked="">Mostrar Todos<br>
-  <input type="radio" name="somenteAberto" value="somenteAberto"> Somente Aberto<br>
-  <input type="radio" name="somenteFechado" value="somenteFechado"> Somente Fechado
-</form>
+function renderAddTodoAtTopFilter(input, todoList, filtro) {
+    return `${filtro}
 	<div id="app">
         ${input}
         ${todoList}
@@ -55,26 +60,18 @@ function renderAddTodoAtBottom(input, todoList) {
     </div>`;
 }
 
-function renderAddTodoAtBottomFilter(input, todoList) {
+function renderAddTodoAtBottomFilter(input, todoList, filtro) {
     return `
 		<div id="app">
 			${todoList}
 			${input}
 		</div>
-		<form action="">
-		  <input type="radio" name="toos" value="todos" checked="">Mostrar Todos<br>
-		  <input type="radio" name="somenteAberto" value="somenteAberto"> Somente Aberto<br>
-		  <input type="radio" name="somenteFechado" value="somenteFechado"> Somente Fechado
-		</form>`;
+		${filtro}`;
 }
 
-function renderAddTodoAtBottomFilterTop(input, todoList) {
+function renderAddTodoAtBottomFilterTop(input, todoList, filtro) {
     return `
-		<form action="">
-		  <input type="radio" name="toos" value="todos" checked="">Mostrar Todos<br>
-		  <input type="radio" name="somenteAberto" value="somenteAberto"> Somente Aberto<br>
-		  <input type="radio" name="somenteFechado" value="somenteFechado"> Somente Fechado
-		</form>
+		${filtro}
 		<div id="app">
 			${todoList}
 			${input}
@@ -82,7 +79,21 @@ function renderAddTodoAtBottomFilterTop(input, todoList) {
 }
 
 function renderInput() {
-    return `<div class="todo__input"><input type="text" id="todoInput"><button id="addTodo">Add</button></div>`;
+    return `<div class="todo__input">Item: <input type="text" id="todoInput"><button id="addTodo"> + </button></div><hr>`;
+}
+
+function renderFiltro() {
+	return '<div>'+
+	'<hr>'+
+	'<h3> Filtro:</h3>'+
+	'<form action="">'+
+	  '<input class="checkbox" type="radio" name="toos" value="todos" checked=""><span> Mostrar Todos</span>'+
+	  '<input class="checkbox" type="radio" name="somenteAberto" value="somenteAberto"> <span> Somente Aberto</span>'+
+	  '<input class="checkbox" type="radio" name="somenteFechado" value="somenteFechado"> <span> Somente Fechado</span>'+
+	'</form>'+
+	'</div>'+
+	'</br>'+
+	'<hr>';
 }
 
 function renderTodos(todoItems) {
