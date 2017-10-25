@@ -4,13 +4,12 @@ import {addTodo, toggleTodoState, filtrar} from './actions';
 
 export function registerEventHandlers() {
     listen('click', '#addTodo', event => {
-		console.log('ok2');
         const todoInput = document.getElementById('todoInput');
         todos.dispatch(addTodo(todoInput.value));
         event.stopPropagation();
     });
 	
-	//codigo para adicionar novo item com o pressionar da tecla ENTER\\
+	//codigo para adicionar novo item com o pressionar da tecla ENTER
 	listen('keydown', '#todoInput', event => {
 		if (event.code == 'Enter' || event.keyCode == 13) {
 			const todoInput = document.getElementById('todoInput');
@@ -30,7 +29,6 @@ export function registerEventHandlers() {
 		var elemento = event.target;
 
 		var listaInputs = document.querySelectorAll('[type="radio"]');
-		console.log(listaInputs);
 		listaInputs[0].checked = false;
 		listaInputs[1].checked = false;
 		listaInputs[2].checked = false;

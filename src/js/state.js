@@ -1,4 +1,5 @@
-import {createStore} from './lib/state';
+import {createStore} from 'redux';
+import {render} from './view';
 
 const initialState = {
     todos: [
@@ -66,12 +67,18 @@ function todoChangeHandler(state, change) {
             break;
 			
 		case 'FILTRAR':
-		console.log(initialState.todos);
             state.todos = initialStateAux.todos.filter(function(el) {
 				return filtro(change.text, el)
 			});
             break;
+			
+		default :
+			render(document.body, state);
+			
+			break;
     }
+	
+	return state;
 }
 
 function filtro(tipo, el) {
@@ -94,4 +101,4 @@ function adicionarElemento(texto, tamanho) {
 	return elemento;
 }
 
-export const todos = createStore(todoChangeHandler, initialState);
+export let todos = createStore(todoChangeHandler, initialState);
