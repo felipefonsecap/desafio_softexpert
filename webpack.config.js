@@ -1,5 +1,7 @@
 var path = require('path');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 module.exports = {
     entry: ['babel-polyfill', path.normalize(__dirname + '/src/js/main')],
@@ -19,16 +21,17 @@ module.exports = {
                     presets: ['es2015']
                 }
             },
-            {
-                test: /\.css$/,
-				use: ExtractTextPlugin.extract({
-				  fallback: "style-loader",
-				  use: "css-loader"
-				})
-            }
+            { test: /\.css$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader") }
         ]
     },
 	plugins: [
-        new ExtractTextPlugin("styles.css")
+        new ExtractTextPlugin("styles.css"),
+		new UglifyJSPlugin(),
+		new OptimizeCssAssetsPlugin({
+		  assetNameRegExp: /\.optimize\.css$/g,
+		  cssProcessor: require('cssnano'),
+		  cssProcessorOptions: { discardComments: {removeAll: true } },
+		  canPrint: true
+		})
     ]
 };
