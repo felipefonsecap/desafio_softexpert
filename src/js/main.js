@@ -1,9 +1,10 @@
 
 
 import {todos} from './state';
-import {render} from './view';
+import {renderLista} from './view';
 import {registerEventHandlers} from './events';
-
-todos.subscribe(newState => render(document.body, todos.getState()));
+console.log(todos.getState());
+document.getElementById('lista');
+todos.subscribe(newState => renderLista(document.getElementById('lista'), todos.getState()));
 
 registerEventHandlers();

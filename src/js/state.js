@@ -1,5 +1,5 @@
 import {createStore} from 'redux';
-import {render} from './view';
+import {renderInicial} from './view';
 
 const initialState = {
     todos: [
@@ -73,7 +73,7 @@ function todoChangeHandler(state, change) {
             break;
 			
 		default :
-			render(document.body, state);
+			renderInicial(document.getElementById('root'), state);
 			
 			break;
     }

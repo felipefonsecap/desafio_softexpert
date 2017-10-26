@@ -1,12 +1,18 @@
 import {isEnabled} from './lib/feature';
 
-export function render(el, state) {
+export function renderInicial(el, state) {
     const todoItems = state.todos.map(renderTodoItem).join('');
     el.innerHTML = renderApp(
         renderInput(),
         renderTodos(todoItems),
 		renderFiltro()
     );
+}
+
+export function renderLista(el, state) {
+    const todoItems = state.todos.map(renderTodoItem).join('');
+	
+    el.innerHTML = renderTodos(todoItems);
 }
 
 function renderApp(input, todoList, filtro) {
@@ -41,7 +47,7 @@ function renderTitulo() {
 function renderAddTodoAtTop(input, todoList, filtro) {
     return `<div id="app">
         ${input}
-        ${todoList}
+        <div id="lista">${todoList}</div>
     </div>`;
 }
 
@@ -49,13 +55,13 @@ function renderAddTodoAtTopFilter(input, todoList, filtro) {
     return `${filtro}
 	<div id="app">
         ${input}
-        ${todoList}
+        <div id="lista">${todoList}</div>
     </div>`;
 }
 
 function renderAddTodoAtBottom(input, todoList) {
     return `<div id="app">
-        ${todoList}
+        <div id="lista">${todoList}</div>
         ${input}
     </div>`;
 }
@@ -63,7 +69,7 @@ function renderAddTodoAtBottom(input, todoList) {
 function renderAddTodoAtBottomFilter(input, todoList, filtro) {
     return `
 		<div id="app">
-			${todoList}
+			<div id="lista">${todoList}</div>
 			${input}
 		</div>
 		${filtro}`;
@@ -73,7 +79,7 @@ function renderAddTodoAtBottomFilterTop(input, todoList, filtro) {
     return `
 		${filtro}
 		<div id="app">
-			${todoList}
+			<div id="lista">${todoList}</div>
 			${input}
 		</div>`;
 }
