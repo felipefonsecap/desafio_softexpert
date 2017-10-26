@@ -38,15 +38,8 @@ module.exports = {
         ]
     },
 	plugins: [
-       new ExtractTextPlugin("styles.css"),
-		new UglifyJSPlugin(),
-		new OptimizeCssAssetsPlugin({
-		  assetNameRegExp: /\.optimize\.css$/g,
-		  cssProcessor: require('cssnano'),
-		  cssProcessorOptions: { discardComments: {removeAll: true } },
-		  canPrint: true
-		})
-	]
+        new ExtractTextPlugin("styles.css")
+    ]
 };
 
 
