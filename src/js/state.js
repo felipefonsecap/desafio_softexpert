@@ -2,7 +2,6 @@ import {createStore} from 'redux';
 import {renderInicial} from './view';
 
 var initialState = JSON.parse(sessionStorage.getItem("lista"));
-console.log(initialState);
 if (!initialState) {
 	initialState = {
 		todos: [
@@ -30,7 +29,6 @@ if (!initialState) {
 	};
 	sessionStorage.setItem("lista", JSON.stringify(initialState));
 }
-console.log(initialState);
 
 const initialStateAux = JSON.parse(JSON.stringify(initialState));
 

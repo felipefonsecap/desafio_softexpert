@@ -1,115 +1,166 @@
 import {isEnabled} from './lib/feature';
+import React from 'react'
+import ReactDOM from 'react-dom';
 
 export function renderInicial(el, state) {
-    const todoItems = state.todos.map(renderTodoItem).join('');
-    el.innerHTML = renderApp(
-        renderInput(),
-        renderTodos(todoItems),
-		renderFiltro()
-    );
+    //const todoItems = state.todos.map(renderTodoItem).join('');
+    ReactDOM.render(renderApp(), el);
+	
+	renderLista(document.getElementById('lista'), state);
 }
 
 export function renderLista(el, state) {
-    const todoItems = state.todos.map(renderTodoItem).join('');
+    //const todoItems = state.todos.map(renderTodoItem).join('');
 	
-    el.innerHTML = renderTodos(todoItems);
+    ReactDOM.render(<div>
+        <ListaUL list={state.todos} />
+    </div>,el);
 }
 
-function renderApp(input, todoList, filtro) {
-	return renderTitulo() + renderCorpo(input, todoList, filtro);
-}
-
-function renderCorpo(input, todoList, filtro) {
+function renderApp() {
 	if (isEnabled('renderBottom') && isEnabled('filter') && isEnabled('filterTop')) {
-		return renderAddTodoAtBottomFilterTop(input, todoList, filtro)
+		return (<div><Titulo /><RenderAddTodoAtBottomFilterTop /></div>);
 	} else {
 		if(isEnabled('renderBottom') && isEnabled('filter')) {
-			return renderAddTodoAtBottomFilter(input, todoList, filtro)
+			return (<div><Titulo /><RenderAddTodoAtBottomFilter /></div>);
 		}
 		else {
 			if(isEnabled('filter')) {
-				return renderAddTodoAtTopFilter(input, todoList, filtro);
+				return (<div><Titulo /><RenderAddTodoAtTopFilter /></div>);
 			} else {
 				if(isEnabled('renderBottom')) {
-					return renderAddTodoAtBottom(input, todoList, '');
+					return (<div><Titulo /><RenderAddTodoAtBottom /></div>);
 				} else {
-					return renderAddTodoAtTop(input, todoList, '');
+					return (<div><Titulo /><RenderAddTodoAtTop /></div>);
 				}			
 			}
 		}
 	}
 }
 
-function renderTitulo() {
-	return '<h2 id="titulo">Todo List</h2>';
-}
+class Titulo extends React.Component {
+	render() {
+		return (
+			<h2 id="titulo">Todo List</h2>
+		);
+	}
+};
 
-function renderAddTodoAtTop(input, todoList, filtro) {
-    return `<div id="app">
-        ${input}
-        <div id="lista">${todoList}</div>
-    </div>`;
-}
+class RenderAddTodoAtTop extends React.Component {
+  render() {
+		return (
+			<div id="app">
+				<AddInput />
+				<div id="lista"></div>
+			</div>
+		);
+	}
+};
 
-function renderAddTodoAtTopFilter(input, todoList, filtro) {
-    return `${filtro}
-	<div id="app">
-        ${input}
-        <div id="lista">${todoList}</div>
-    </div>`;
-}
+class RenderAddTodoAtTopFilter extends React.Component {
+  render() {
+		return (
+			<div>
+				<Filtro />
+				<div id="app">
+					<AddInput />
+					<div id="lista"></div>
+				</div>
+			</div>
+		);
+	}
+};
 
-function renderAddTodoAtBottom(input, todoList) {
-    return `<div id="app">
-        <div id="lista">${todoList}</div>
-        ${input}
-    </div>`;
-}
+class RenderAddTodoAtBottom extends React.Component {
+  render() {
+		return (
+			<div id="app">
+				<div id="lista"></div>
+				<AddInput />
+			</div>
+		);
+	}
+};
 
-function renderAddTodoAtBottomFilter(input, todoList, filtro) {
-    return `
-		<div id="app">
-			<div id="lista">${todoList}</div>
-			${input}
+class RenderAddTodoAtBottomFilter extends React.Component {
+  render() {
+    return (
+		<div>
+			<div id="app">
+				<div id="lista"></div>
+				<AddInput />
+			</div>
+			<Filtro />
 		</div>
-		${filtro}`;
-}
+    );
+  }
+};
 
-function renderAddTodoAtBottomFilterTop(input, todoList, filtro) {
-    return `
-		${filtro}
-		<div id="app">
-			<div id="lista">${todoList}</div>
-			${input}
-		</div>`;
-}
+class RenderAddTodoAtBottomFilterTop extends React.Component {
+  render() {
+    return (
+		<div>
+			<Filtro />
+			<div id="app">
+				<div id="lista"></div>
+				<AddInput />
+			</div>]
+		</div>
+    );
+  }
+};
 
-function renderInput() {
-    return `<div class="todo__input">Item: <input type="text" id="todoInput"><button id="addTodo"> + </button></div><hr>`;
-}
 
-function renderFiltro() {
-	return '<div>'+
-	'<hr>'+
-	'<h3> Filtro:</h3>'+
-	'<form action="">'+
-	  '<input class="checkbox" type="radio" name="toos" value="todos" checked=""><span> Mostrar Todos</span>'+
-	  '<input class="checkbox" type="radio" name="somenteAberto" value="somenteAberto"> <span> Somente Aberto</span>'+
-	  '<input class="checkbox" type="radio" name="somenteFechado" value="somenteFechado"> <span> Somente Fechado</span>'+
-	'</form>'+
-	'</div>'+
-	'</br>'+
-	'<hr>';
-}
+class AddInput extends React.Component {
+  render() {
+    return (
+      <div className="todo__input">
+		Item: 
+		<input type="text" id="todoInput">
+		</input>
+		<button id="addTodo"> + </button>
+      </div>
+    );
+  }
+};
 
-function renderTodos(todoItems) {
-    return `<ul class="todo">${todoItems}</ul>`;
-}
+class Filtro extends React.Component {
+  render() {
+    return (
+		<div>
+			<div>
+				<hr></hr>
+				<h3> Filtro:</h3>
+				<form action="">
+				  <input className="checkbox" type="radio" name="toos" value="todos" defaultChecked="true"></input><span> Mostrar Todos</span>
+				  <input className="checkbox" type="radio" name="somenteAberto" value="somenteAberto"></input> <span> Somente Aberto</span>
+				  <input className="checkbox" type="radio" name="somenteFechado" value="somenteFechado"></input> <span> Somente Fechado</span>
+				</form>
+			</div>
+			<br></br>
+			<hr></hr>
+		</div>);
+	}
+};
 
-function renderTodoItem(todo) {
-    const todoClass = `todo__item todo__item--${todo.done ? 'done' : 'open'}`;
-    return `<li class="${todoClass}">
-        <input class="js_toggle_todo" type="checkbox" data-id="${todo.id}"${todo.done ? ' checked' : ''}>
-        ${todo.text}
-    </li>`;
+class ListaUL extends React.Component {
+  render() {
+    return (
+        <ul>
+          {this.props.list.map(function(listValue){
+            return <TodoItem id={listValue.id} text={listValue.text} done={listValue.done}/>;
+          })}
+        </ul>
+      )
+    }
+};
+
+class TodoItem extends React.Component {
+  render() {
+   
+    return (<li className="todo__item todo__item--{this.props.done ? 'done' : 'open'}">
+        <input className="js_toggle_todo" type="checkbox" data-id={this.props.id} defaultChecked={this.props.done}></input>
+        {this.props.text}
+    </li>);
+  }
 }
