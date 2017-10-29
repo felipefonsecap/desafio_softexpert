@@ -11,7 +11,7 @@ export function renderInicial(el, state) {
 
 export function renderLista(el, state) {
     //const todoItems = state.todos.map(renderTodoItem).join('');
-	
+	console.log(<ListaUL list={state.todos} />);
     ReactDOM.render(<div>
         <ListaUL list={state.todos} />
     </div>,el);
@@ -157,9 +157,9 @@ class ListaUL extends React.Component {
 
 class TodoItem extends React.Component {
   render() {
-   
+   console.log(this.props);
     return (<li className="todo__item todo__item--{this.props.done ? 'done' : 'open'}">
-        <input className="js_toggle_todo" type="checkbox" data-id={this.props.id} defaultChecked={this.props.done}></input>
+        <input className="js_toggle_todo" type="checkbox" data-id={this.props.id} checked={this.props.done}></input>
         {this.props.text}
     </li>);
   }
